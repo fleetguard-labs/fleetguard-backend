@@ -1,0 +1,24 @@
+name: CI
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: fleetguard-backend
+      - uses: actions/checkout@v4
+        with:
+          repository: fleetguard-labs/fleetguard-analyzer
+          path: fleetguard-analyzer
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+        working-directory: fleetguard-backend
+      - run: npm test
+        working-directory: fleetguard-backend
+      - run: node replay-testnet.mjs
+        working-directory: fleetguard-backend
